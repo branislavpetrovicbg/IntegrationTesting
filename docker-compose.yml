@@ -1,0 +1,20 @@
+services:
+  localstack:
+    image: localstack/localstack:2.0
+    container_name: localstack-s3
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3
+      - DEBUG=0
+    volumes:
+      - ./localstack/init:/etc/localstack/init/ready.d:ro
+    command: >
+      sh -c "chmod +x /etc/localstack/init/ready.d/*.sh || true && \
+      if [ -x /usr/local/bin/docker-entrypoint.sh ]; then /usr/local/bin/docker-entrypoint.sh; else /usr/bin/docker-entrypoint.sh; fi"
+    networks:
+      - integration-network
+
+networks:
+  integration-network:
+    driver: bridge
